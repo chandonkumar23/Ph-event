@@ -8,6 +8,7 @@ import Home from "../Components/Hero/Home";
 import Events from "../Components/Events/Events";
 import AddEvent from "../Components/AddEvent/AddEvent";
 import MyEvent from './../Components/MyEvent/MyEvent';
+import PrivateRoute from "../Components/PrivetRoute/PrivetRoute";
 
 
 
@@ -29,7 +30,7 @@ const router = createBrowserRouter([
             },
             {
                 path:'events',
-                element:<Events />
+                element:<PrivateRoute> <Events /> </PrivateRoute>
             },
             {
                 path:'myEvent',
