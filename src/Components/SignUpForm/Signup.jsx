@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { FaUser, FaEnvelope, FaLock, FaImage } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../Auth/AuthContex";
 
 const Signup = () => {
   const [form, setForm] = useState({
@@ -9,6 +11,9 @@ const Signup = () => {
     password: '',
     confirmPassword: '',
   });
+
+  const navigate = useNavigate();
+  const { setUser } = useContext(AuthContext);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -35,7 +40,22 @@ const Signup = () => {
 
       const data = await res.json();
       if (res.ok) {
-        alert("Signup successful!");
+        // Automatically log in the user
+        const loginRes = await fetch('http://localhost:5000/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username: form.username, password: form.password }),
+        });
+
+        const loginData = await loginRes.json();
+        if (loginRes.ok) {
+          localStorage.setItem('token', loginData.token);
+          setUser(loginData.user);
+          alert("Signup & login successful!");
+          window.location.reload(); // ✅ reload to reflect user state immediately (navbar etc.)
+        } else {
+          alert("Signup done, but login failed");
+        }
       } else {
         alert(data.message || "Signup failed");
       }
@@ -73,9 +93,7 @@ const Signup = () => {
           <button
             type="submit"
             className="w-full py-3 rounded-md text-white font-semibold"
-            style={{
-              background: "linear-gradient(to right, #833ab4, #5851db, #1e90ff)",
-            }}
+            style={{ background: "linear-gradient(to right, #833ab4, #5851db, #1e90ff)" }}
           >
             Sign Up
           </button>

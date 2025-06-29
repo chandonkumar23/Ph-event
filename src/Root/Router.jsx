@@ -20,25 +20,26 @@ const router = createBrowserRouter([
         element: <Main></Main>,
         children: [
             {
-                path:'/',
-                element:<Home></Home>
+                path: '/',
+                element: <Home></Home>
 
             },
             {
-                path:'signup',
-                element:<Signup />
+                path: 'signup',
+                element: <Signup  />
+            },
+
+            {
+                path: 'events',
+                element: <PrivateRoute> <Events /> </PrivateRoute>
             },
             {
-                path:'events',
-                element:<PrivateRoute> <Events /> </PrivateRoute>
+                path: 'myEvent',
+                element: <MyEvent />
             },
             {
-                path:'myEvent',
-                element:<MyEvent />
-            },
-            {
-                path:'addEvent',
-                element:<AddEvent/>
+                path: 'addEvent',
+                element: <AddEvent />
             }
         ]
 
