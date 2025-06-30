@@ -20,7 +20,7 @@ const Events = () => {
     useEffect(() => {
         const fetchEvents = async () => {
             try {
-                const res = await fetch("http://localhost:5000/api/events");
+                const res = await fetch("https://event-server-nu-lyart.vercel.app/api/events");
                 const data = await res.json();
                 setEvents(data);
                 setFilteredEvents(data);
@@ -107,7 +107,7 @@ const Events = () => {
         }
 
         try {
-            const res = await fetch(`http://localhost:5000/api/events/join/${eventId}`, {
+            const res = await fetch(`https://event-server-nu-lyart.vercel.app/api/events/join/${eventId}`, {
                 method: "PATCH",
             });
 

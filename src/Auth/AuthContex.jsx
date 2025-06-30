@@ -13,7 +13,7 @@ const AuthProvider = ({ children }) => {
       const token = localStorage.getItem("token");
       if (!token) return;
       try {
-        const res = await axios.get("http://localhost:5000/api/user/me", {
+        const res = await axios.get("https://event-server-nu-lyart.vercel.app/api/user/me", {
           headers: { Authorization: `Bearer ${token}` },
         });
         setUser(res.data);

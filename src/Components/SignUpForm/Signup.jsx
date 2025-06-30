@@ -32,7 +32,7 @@ const Signup = () => {
     const normalizedEmail = form.email.toLowerCase();
 
     try {
-      const res = await fetch('http://localhost:5000/signup', {
+      const res = await fetch('https://event-server-nu-lyart.vercel.app/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -45,7 +45,7 @@ const Signup = () => {
 
       const data = await res.json();
       if (res.ok) {
-        const loginRes = await fetch('http://localhost:5000/login', {
+        const loginRes = await fetch('https://event-server-nu-lyart.vercel.app/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({

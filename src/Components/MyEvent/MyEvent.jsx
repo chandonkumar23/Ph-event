@@ -14,7 +14,7 @@ const MyEvent = () => {
   useEffect(() => {
     if (!user?.email) return;
 
-    const BookingsData = `http://localhost:5000/api/events/${user.email}`;
+    const BookingsData = `https://event-server-nu-lyart.vercel.app/api/events/${user.email}`;
 
     fetch(BookingsData)
       .then(res => res.json())
@@ -28,7 +28,7 @@ const MyEvent = () => {
   };
 
   const handleDeleteConfirmed = () => {
-    fetch(`http://localhost:5000/api/events/${bookToDelete._id}`, {
+    fetch(`https://event-server-nu-lyart.vercel.app/api/events/${bookToDelete._id}`, {
       method: 'DELETE',
     })
       .then(res => res.json())
@@ -49,14 +49,14 @@ const MyEvent = () => {
     const eventId = updatePayload._id;
     delete updatePayload._id;
 
-    fetch(`http://localhost:5000/api/events/${eventId}`, {
+    fetch(`https://event-server-nu-lyart.vercel.app/api/events/${eventId}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(updatePayload),
     })
       .then(res => res.json())
       .then(() => {
-        fetch(`http://localhost:5000/api/events/${user.email}`)
+        fetch(`https://event-server-nu-lyart.vercel.app/api/events/${user.email}`)
           .then(res => res.json())
           .then(data => {
             setBooking(data);
