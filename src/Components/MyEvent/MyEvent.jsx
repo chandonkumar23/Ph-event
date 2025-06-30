@@ -1,8 +1,8 @@
 import { useContext, useEffect, useState } from 'react';
 import { AuthContext } from './../../Auth/AuthContex';
 import MyCard from './MyCard';
-import { toast, ToastContainer } from 'react-toastify'; // ✅ import toast
-import 'react-toastify/dist/ReactToastify.css'; // ✅ import styles
+import { toast, ToastContainer } from 'react-toastify'; 
+import 'react-toastify/dist/ReactToastify.css'; 
 
 const MyEvent = () => {
   const { user } = useContext(AuthContext);
@@ -36,7 +36,7 @@ const MyEvent = () => {
         setBooking(prev => prev.filter(item => item._id !== bookToDelete._id));
         setShowDeleteModal(false);
         setBookToDelete(null);
-        toast.success("Event deleted successfully!"); // ✅ Toast for delete
+        toast.success("Event deleted successfully!"); 
       })
       .catch(err => {
         console.error("Delete failed", err);
@@ -61,7 +61,7 @@ const MyEvent = () => {
           .then(data => {
             setBooking(data);
             setSelectedBook(null);
-            toast.success("Event updated successfully!"); // ✅ Toast for update
+            toast.success("Event updated successfully!"); 
           });
       })
       .catch(error => {

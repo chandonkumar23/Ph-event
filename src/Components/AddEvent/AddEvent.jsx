@@ -169,8 +169,6 @@ const AddEvent = () => {
           </button>
         </form>
       </div>
-
-      {/* Toast container included here */}
       <ToastContainer position="top-center" autoClose={3000} />
     </div>
   );

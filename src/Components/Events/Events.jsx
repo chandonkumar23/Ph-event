@@ -113,13 +113,13 @@ const Events = () => {
 
             const data = await res.json();
             if (res.ok) {
-                // Update local list
+               
                 const updatedEvents = events.map((ev) =>
                     ev._id === eventId ? { ...ev, attendeeCount: ev.attendeeCount + 1 } : ev
                 );
                 setEvents(updatedEvents);
 
-                // Track joined
+           
                 const updatedJoined = [...joinedEvents, eventId];
                 setJoinedEvents(updatedJoined);
                 localStorage.setItem("joinedEvents", JSON.stringify(updatedJoined));
@@ -141,7 +141,7 @@ const Events = () => {
             <h2 className="text-3xl font-bold mb-6 text-center text-white">All Events</h2>
 
             {/* Filters */}
-            <div className="flex flex-wrap gap-4 justify-center items-center mb-10">
+            <div className="flex flex-wrap gap-4 justify-center items-center mb-20">
                 <input
                     type="text"
                     placeholder="Search by title..."

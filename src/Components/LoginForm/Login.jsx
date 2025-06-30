@@ -2,13 +2,13 @@ import CloseIcon from '@mui/icons-material/Close';
 import { useEffect, useState } from 'react';
 import { FaUser, FaEye, FaEyeSlash } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
 const Login = ({ handleClose, open, setUser }) => {
   const [show, setShow] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [form, setForm] = useState({ email: '', password: '' });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(''); 
   const navigate = useNavigate();
 
   const handleSignupClick = () => {
@@ -30,27 +30,38 @@ const Login = ({ handleClose, open, setUser }) => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setError(''); 
+
     try {
       const res = await fetch('http://localhost:5000/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form)  // form has { email, password }
+        body: JSON.stringify({
+          email: form.email.trim(),
+          password: form.password,
+        }),
       });
 
-      const data = await res.json();
+      let data;
+      try {
+        data = await res.json();
+      } catch (jsonError) {
+        data = {};
+      }
+
       if (res.ok) {
-        toast.success("Login successful!");
         localStorage.setItem('token', data.token);
         setUser(data.user);
-        setTimeout(() => {
-          handleClose(); // closes modal after toast shows
-        }, 1000);
+        setError('');
+        handleClose();
       } else {
-        toast.error(data.message || 'Login failed');
+        setError(data.message || 'Invalid email or password');
       }
     } catch (err) {
-      console.error(err);
-      toast.error("Something went wrong");
+      setError('Network error. Please try again.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -58,11 +69,15 @@ const Login = ({ handleClose, open, setUser }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60">
-      <div className={`bg-white text-white rounded-lg shadow-lg p-6 w-full max-w-[700px] transform transition-all duration-500 ${show ? 'translate-y-0 opacity-100' : '-translate-y-10 opacity-0'}`}>
+      <div
+        className={`bg-white text-black rounded-lg shadow-lg p-6 w-full max-w-[700px] transform transition-all duration-500 ${
+          show ? 'translate-y-0 opacity-100' : '-translate-y-10 opacity-0'
+        }`}
+      >
         <div>
-          <div className='flex justify-between items-center border-b-2 p-2 mb-10'>
-            <h2 className='text-black'>Login</h2>
-            <CloseIcon onClick={handleClose} className='text-black cursor-pointer' />
+          <div className="flex justify-between items-center border-b-2 p-2 mb-10">
+            <h2 className="text-black">Login</h2>
+            <CloseIcon onClick={handleClose} className="text-black cursor-pointer" />
           </div>
           <form onSubmit={handleLogin} className="space-y-4">
             <div className="flex items-center bg-gray-100 px-4 py-3 rounded-md border">
@@ -87,18 +102,31 @@ const Login = ({ handleClose, open, setUser }) => {
                 className="bg-transparent w-full outline-none text-gray-700"
                 required
               />
-              <button onClick={() => setShowPassword(!showPassword)} type="button">
-                {showPassword ? <FaEyeSlash className="text-gray-400" /> : <FaEye className="text-gray-400" />}
+              <button
+                onClick={() => setShowPassword(!showPassword)}
+                type="button"
+                tabIndex={-1}
+              >
+                {showPassword ? (
+                  <FaEyeSlash className="text-gray-400" />
+                ) : (
+                  <FaEye className="text-gray-400" />
+                )}
               </button>
             </div>
             <button
               type="submit"
-              className="w-full py-3 rounded-md text-white font-semibold bg-gradient-to-br hover:opacity-90"
-              style={{ background: "linear-gradient(to right, #833ab4, #5851db, #1e90ff)" }}
+              disabled={loading}
+              className={`w-full py-3 rounded-md text-white font-semibold bg-gradient-to-br hover:opacity-90 ${
+                loading ? 'opacity-50 cursor-not-allowed' : ''
+              }`}
+              style={{ background: 'linear-gradient(to right, #833ab4, #5851db, #1e90ff)' }}
             >
-              Log In
+              {loading ? 'Logging in...' : 'Log In'}
             </button>
-            <h2 className='text-black'>
+
+            {error && <p className="text-red-600 text-sm mt-2">{error}</p>}
+            <h2 className="text-black">
               Don't have an account?{' '}
               <button onClick={handleSignupClick} className="text-blue-600 underline">
                 Sign up

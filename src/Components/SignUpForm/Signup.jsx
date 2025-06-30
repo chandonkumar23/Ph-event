@@ -23,10 +23,13 @@ const Signup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (form.password !== form.confirmPassword) {
       toast.error("Passwords do not match");
       return;
     }
+
+    const normalizedEmail = form.email.toLowerCase();
 
     try {
       const res = await fetch('http://localhost:5000/signup', {
@@ -34,7 +37,7 @@ const Signup = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           username: form.username,
-          email: form.email,
+          email: normalizedEmail,
           photoUrl: form.photoUrl,
           password: form.password
         })
@@ -42,11 +45,13 @@ const Signup = () => {
 
       const data = await res.json();
       if (res.ok) {
-        // Automatically log in the user
         const loginRes = await fetch('http://localhost:5000/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ username: form.username, password: form.password }),
+          body: JSON.stringify({
+            email: normalizedEmail,
+            password: form.password,
+          }),
         });
 
         const loginData = await loginRes.json();
@@ -54,11 +59,12 @@ const Signup = () => {
           localStorage.setItem('token', loginData.token);
           setUser(loginData.user);
           toast.success("Signup & login successful!");
+
           setTimeout(() => {
-            window.location.reload(); // refresh to reflect user state (navbar etc.)
+            window.location.reload();
           }, 1500);
         } else {
-          toast.error("Signup done, but login failed");
+          toast.error("Signup done, but login failed: " + (loginData.message || ""));
         }
       } else {
         toast.error(data.message || "Signup failed");
@@ -81,7 +87,11 @@ const Signup = () => {
             <div className="relative" key={name}>
               <input
                 type={name.includes("password") ? "password" : "text"}
-                placeholder={name === "photoUrl" ? "Photo URL" : name.charAt(0).toUpperCase() + name.slice(1)}
+                placeholder={
+                  name === "photoUrl"
+                    ? "Photo URL"
+                    : name.charAt(0).toUpperCase() + name.slice(1)
+                }
                 name={name}
                 value={form[name]}
                 onChange={handleChange}
@@ -104,7 +114,6 @@ const Signup = () => {
         </form>
       </div>
 
-      {/* Toast container */}
       <ToastContainer position="top-center" autoClose={3000} />
     </div>
   );
