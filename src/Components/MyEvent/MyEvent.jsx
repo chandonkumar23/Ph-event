@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { AuthContext } from './../../Auth/AuthContex';
 import MyCard from './MyCard';
 
@@ -9,13 +9,17 @@ const MyEvent = () => {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [bookToDelete, setBookToDelete] = useState(null);
 
-    const BookingsData = `http://localhost:5000/api/events/${user.email}`;
-
+    //  Prevent fetch until user is ready
     useEffect(() => {
+        if (!user?.email) return;
+
+        const BookingsData = `http://localhost:5000/api/events/${user.email}`;
+
         fetch(BookingsData)
             .then(res => res.json())
-            .then(data => setBooking(data));
-    }, [user.email]);
+            .then(data => setBooking(data))
+            .catch(err => console.error("Failed to fetch bookings", err));
+    }, [user?.email]);
 
     const confirmDelete = (book) => {
         setBookToDelete(book);
@@ -31,7 +35,8 @@ const MyEvent = () => {
                 setBooking(prev => prev.filter(item => item._id !== bookToDelete._id));
                 setShowDeleteModal(false);
                 setBookToDelete(null);
-            });
+            })
+            .catch(err => console.error("Delete failed", err));
     };
 
     const handleUpdateSubmit = () => {
@@ -58,13 +63,21 @@ const MyEvent = () => {
             });
     };
 
-    const handleUpdateChange = (e) => {
-        setSelectedBook({ ...selectedBook, [e.target.name]: e.target.value });
-    };
+  const handleUpdateChange = (e) => {
+    const { name, value } = e.target;
+    const newValue = name === "attendeeCount" ? Number(value) : value;
+    setSelectedBook(prev => ({ ...prev, [name]: newValue }));
+};
+
+
+    
+    if (!user?.email) {
+        return <div className="p-7 text-lg text-gray-600">Loading user data...</div>;
+    }
 
     return (
-        <div className="p-7">
-            <h2 className="text-3xl font-bold mb-4">My Events</h2>
+        <div className="p-7 pt-36 min-h-screen bg-gradient-to-br from-purple-700 via-indigo-700 to-blue-500 text-white overflow-hidden">
+            <h2 className="text-3xl font-bold mb-4 text-center">My Events</h2>
 
             {booking.length === 0 ? (
                 <p>No events found.</p>
@@ -83,7 +96,7 @@ const MyEvent = () => {
 
             {/* Update Modal */}
             {selectedBook && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                <div className="fixed inset-0 bg-black text-black bg-opacity-50 flex items-center justify-center z-50">
                     <div className="bg-white p-6 rounded shadow-lg w-full max-w-md">
                         <h3 className="text-2xl font-bold text-gray-800 mb-6 text-center">Update Event</h3>
 

@@ -14,38 +14,43 @@ const MyCard = ({ book, onDelete, onUpdate }) => {
   const formattedDate = new Date(dateTime).toLocaleString();
 
   return (
-    <div className="border rounded-md p-4 shadow-md bg-white">
-      <h2 className="text-xl font-semibold mb-1">{title}</h2>
-      <p className="text-gray-700 mb-1">
-        <strong>Posted By:</strong> {name}
-      </p>
-      <p className="text-gray-700 mb-1">
-        <strong>Date & Time:</strong> {formattedDate}
-      </p>
-      <p className="text-gray-700 mb-1">
-        <strong>Location:</strong> {location}
-      </p>
-      <p className="text-gray-700 mb-2">
-        <strong>Description:</strong> {description}
-      </p>
-      <p className="text-gray-700 mb-4">
-        <strong>Attendee Count:</strong> {attendeeCount}
-      </p>
-      <div className="flex gap-2">
-        <button
-          onClick={onUpdate}
-          className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
-        >
-          Update
-        </button>
-        <button
-          onClick={onDelete}
-          className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700"
-        >
-          Delete
-        </button>
-      </div>
-    </div>
+    <div className="bg-white rounded-2xl shadow-lg p-6 transition-transform hover:scale-[1.01] border border-gray-200">
+  <h2 className="text-2xl font-bold text-gray-800 mb-2">{title}</h2>
+
+  <div className="text-gray-600 space-y-1 mb-4">
+    <p>
+      <span className="font-medium text-gray-700">👤 Posted By:</span> {name}
+    </p>
+    <p>
+      <span className="font-medium text-gray-700">🕒 Date & Time:</span> {formattedDate}
+    </p>
+    <p>
+      <span className="font-medium text-gray-700">📍 Location:</span> {location}
+    </p>
+    <p>
+      <span className="font-medium text-gray-700">📝 Description:</span> {description}
+    </p>
+    <p>
+      <span className="font-medium text-gray-700">👥 Attendees:</span> {attendeeCount}
+    </p>
+  </div>
+
+  <div className="flex justify-end gap-3">
+    <button
+      onClick={onUpdate}
+      className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition"
+    >
+      ✏️ Update
+    </button>
+    <button
+      onClick={onDelete}
+      className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition"
+    >
+      🗑️ Delete
+    </button>
+  </div>
+</div>
+
   );
 };
 
