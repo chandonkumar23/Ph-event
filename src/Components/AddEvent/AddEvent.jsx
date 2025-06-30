@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import {
   FaCalendarAlt,
   FaUser,
@@ -6,8 +6,11 @@ import {
   FaClipboardList,
   FaUsers,
 } from "react-icons/fa";
+import { AuthContext } from "../../Auth/AuthContex";  // make sure path is correct
 
 const AddEvent = () => {
+  const { user } = useContext(AuthContext); // get logged-in user
+
   const [formData, setFormData] = useState({
     title: "",
     name: "",
@@ -24,10 +27,21 @@ const AddEvent = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!user || !user.email) {
+      alert("You must be logged in to add an event.");
+      return;
+    }
+
     try {
-      // ✅ Convert to full ISO string
       const isoDate = new Date(formData.dateTime).toISOString();
-      const finalData = { ...formData, dateTime: isoDate };
+
+      // Add email from logged-in user to the data sent to backend
+      const finalData = {
+        ...formData,
+        dateTime: isoDate,
+        email: user.email, // <-- here is the user's email sent with event
+      };
 
       const res = await fetch("http://localhost:5000/api/events", {
         method: "POST",
@@ -38,6 +52,7 @@ const AddEvent = () => {
       });
 
       const data = await res.json();
+
       if (res.ok) {
         alert("Event added successfully!");
         setFormData({
@@ -74,6 +89,7 @@ const AddEvent = () => {
               value={formData.title}
               onChange={handleChange}
               className="w-full pl-10 pr-4 py-3 rounded-md bg-gray-100 text-gray-700 placeholder-gray-400 focus:outline-none"
+              required
             />
             <FaClipboardList className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
           </div>
@@ -87,6 +103,7 @@ const AddEvent = () => {
               value={formData.name}
               onChange={handleChange}
               className="w-full pl-10 pr-4 py-3 rounded-md bg-gray-100 text-gray-700 placeholder-gray-400 focus:outline-none"
+              required
             />
             <FaUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
           </div>
@@ -99,6 +116,7 @@ const AddEvent = () => {
               value={formData.dateTime}
               onChange={handleChange}
               className="w-full pl-10 pr-4 py-3 rounded-md bg-gray-100 text-gray-700 focus:outline-none"
+              required
             />
             <FaCalendarAlt className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
           </div>
@@ -112,6 +130,7 @@ const AddEvent = () => {
               value={formData.location}
               onChange={handleChange}
               className="w-full pl-10 pr-4 py-3 rounded-md bg-gray-100 text-gray-700 placeholder-gray-400 focus:outline-none"
+              required
             />
             <FaMapMarkerAlt className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
           </div>
@@ -125,6 +144,7 @@ const AddEvent = () => {
               value={formData.description}
               onChange={handleChange}
               className="w-full pl-10 pr-4 py-3 rounded-md bg-gray-100 text-gray-700 placeholder-gray-400 focus:outline-none resize-none"
+              required
             ></textarea>
             <FaClipboardList className="absolute left-3 top-3 text-gray-400" />
           </div>
@@ -148,8 +168,7 @@ const AddEvent = () => {
             type="submit"
             className="w-full py-3 rounded-md text-white font-semibold"
             style={{
-              background:
-                "linear-gradient(to right, #833ab4, #5851db, #1e90ff)",
+              background: "linear-gradient(to right, #833ab4, #5851db, #1e90ff)",
             }}
           >
             Add Event
