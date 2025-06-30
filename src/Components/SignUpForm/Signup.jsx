@@ -2,6 +2,8 @@ import { useContext, useState } from "react";
 import { FaUser, FaEnvelope, FaLock, FaImage } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../Auth/AuthContex";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Signup = () => {
   const [form, setForm] = useState({
@@ -22,7 +24,7 @@ const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (form.password !== form.confirmPassword) {
-      alert("Passwords do not match");
+      toast.error("Passwords do not match");
       return;
     }
 
@@ -51,17 +53,19 @@ const Signup = () => {
         if (loginRes.ok) {
           localStorage.setItem('token', loginData.token);
           setUser(loginData.user);
-          alert("Signup & login successful!");
-          window.location.reload(); // ✅ reload to reflect user state immediately (navbar etc.)
+          toast.success("Signup & login successful!");
+          setTimeout(() => {
+            window.location.reload(); // refresh to reflect user state (navbar etc.)
+          }, 1500);
         } else {
-          alert("Signup done, but login failed");
+          toast.error("Signup done, but login failed");
         }
       } else {
-        alert(data.message || "Signup failed");
+        toast.error(data.message || "Signup failed");
       }
     } catch (err) {
       console.error(err);
-      alert("Something went wrong");
+      toast.error("Something went wrong");
     }
   };
 
@@ -99,6 +103,9 @@ const Signup = () => {
           </button>
         </form>
       </div>
+
+      {/* Toast container */}
+      <ToastContainer position="top-center" autoClose={3000} />
     </div>
   );
 };

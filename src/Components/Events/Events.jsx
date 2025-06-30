@@ -138,14 +138,14 @@ const Events = () => {
 
     return (
         <div className="min-h-screen pt-32 bg-gradient-to-br from-purple-700 via-indigo-700 to-blue-500 p-6">
-            <h2 className="text-2xl font-bold mb-6 text-center text-white">All Events</h2>
+            <h2 className="text-3xl font-bold mb-6 text-center text-white">All Events</h2>
 
             {/* Filters */}
             <div className="flex flex-wrap gap-4 justify-center items-center mb-10">
                 <input
                     type="text"
                     placeholder="Search by title..."
-                    className="px-4 py-2 rounded-md w-64"
+                    className="px-4 py-2 rounded-md w-64 bg-gray-200"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
@@ -157,12 +157,12 @@ const Events = () => {
                         setDateRangeFilter("all");
                     }}
                     placeholderText="Select a date"
-                    className="px-4 py-2 rounded-md w-44"
+                    className="px-4 py-2 rounded-md w-44 bg-gray-200"
                     dateFormat="yyyy-MM-dd"
                 />
 
                 <select
-                    className="px-4 py-2 rounded-md w-52"
+                    className="px-4 py-2 rounded-md w-52 bg-gray-200"
                     value={dateRangeFilter}
                     onChange={(e) => {
                         setDateRangeFilter(e.target.value);
@@ -176,9 +176,10 @@ const Events = () => {
                     <option value="lastMonth">Last Month</option>
                 </select>
 
+
                 <button
                     onClick={clearFilters}
-                    className="px-4 py-2 rounded-md bg-white text-black border hover:bg-gray-100"
+                    className="px-4 py-2 rounded-md bg-gray-300 text-black border hover:bg-gray-100"
                 >
                     Clear Filters ✖
                 </button>

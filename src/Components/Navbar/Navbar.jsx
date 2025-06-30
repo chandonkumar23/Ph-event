@@ -49,10 +49,15 @@ const Navbar = () => {
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    setUser(null);
-    setDropdownOpen(false);
+    // Your logout logic (e.g. remove token, update context)
+    localStorage.removeItem("token"); // or however you store auth
+    // Optional: reset context/auth state if needed
+    // e.g., setUser(null) if using context
+
+    // Then reload the page
+    window.location.reload();
   };
+
 
   return (
     <nav className="flex justify-between items-center px-6 py-4 bg-transparent absolute top-0 left-0 w-full z-10">
@@ -96,6 +101,7 @@ const Navbar = () => {
                 >
                   Logout
                 </button>
+
               </div>
             )}
           </div>

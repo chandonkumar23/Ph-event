@@ -6,10 +6,12 @@ import {
   FaClipboardList,
   FaUsers,
 } from "react-icons/fa";
-import { AuthContext } from "../../Auth/AuthContex";  // make sure path is correct
+import { AuthContext } from "../../Auth/AuthContex";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const AddEvent = () => {
-  const { user } = useContext(AuthContext); // get logged-in user
+  const { user } = useContext(AuthContext);
 
   const [formData, setFormData] = useState({
     title: "",
@@ -29,18 +31,17 @@ const AddEvent = () => {
     e.preventDefault();
 
     if (!user || !user.email) {
-      alert("You must be logged in to add an event.");
+      toast.error("You must be logged in to add an event.");
       return;
     }
 
     try {
       const isoDate = new Date(formData.dateTime).toISOString();
 
-      // Add email from logged-in user to the data sent to backend
       const finalData = {
         ...formData,
         dateTime: isoDate,
-        email: user.email, // <-- here is the user's email sent with event
+        email: user.email,
       };
 
       const res = await fetch("http://localhost:5000/api/events", {
@@ -54,7 +55,7 @@ const AddEvent = () => {
       const data = await res.json();
 
       if (res.ok) {
-        alert("Event added successfully!");
+        toast.success("Event added successfully!");
         setFormData({
           title: "",
           name: "",
@@ -64,23 +65,22 @@ const AddEvent = () => {
           attendeeCount: 0,
         });
       } else {
-        alert(data.message || "Failed to add event.");
+        toast.error(data.message || "Failed to add event.");
       }
     } catch (err) {
       console.error("Error:", err);
-      alert("Something went wrong.");
+      toast.error("Something went wrong.");
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-700 via-indigo-700 to-blue-500 p-4">
+    <div className="min-h-screen flex items-center justify-center pt-32 bg-gradient-to-br from-purple-700 via-indigo-700 to-blue-500 p-4">
       <div className="w-full max-w-md rounded-md shadow-md p-6 relative bg-white">
         <div className="flex justify-between items-center mb-4 border-b pb-2">
           <h2 className="text-lg font-semibold text-gray-800">Add Event</h2>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Event Title */}
           <div className="relative">
             <input
               type="text"
@@ -94,7 +94,6 @@ const AddEvent = () => {
             <FaClipboardList className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
           </div>
 
-          {/* Name */}
           <div className="relative">
             <input
               type="text"
@@ -108,7 +107,6 @@ const AddEvent = () => {
             <FaUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
           </div>
 
-          {/* Date & Time */}
           <div className="relative">
             <input
               type="datetime-local"
@@ -121,7 +119,6 @@ const AddEvent = () => {
             <FaCalendarAlt className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
           </div>
 
-          {/* Location */}
           <div className="relative">
             <input
               type="text"
@@ -135,7 +132,6 @@ const AddEvent = () => {
             <FaMapMarkerAlt className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
           </div>
 
-          {/* Description */}
           <div className="relative">
             <textarea
               name="description"
@@ -149,7 +145,6 @@ const AddEvent = () => {
             <FaClipboardList className="absolute left-3 top-3 text-gray-400" />
           </div>
 
-          {/* Attendee Count */}
           <div className="relative">
             <input
               type="number"
@@ -163,7 +158,6 @@ const AddEvent = () => {
             <FaUsers className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
           </div>
 
-          {/* Submit Button */}
           <button
             type="submit"
             className="w-full py-3 rounded-md text-white font-semibold"
@@ -175,6 +169,9 @@ const AddEvent = () => {
           </button>
         </form>
       </div>
+
+      {/* Toast container included here */}
+      <ToastContainer position="top-center" autoClose={3000} />
     </div>
   );
 };

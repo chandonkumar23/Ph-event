@@ -14,7 +14,7 @@ const MyCard = ({ book, onDelete, onUpdate }) => {
   const formattedDate = new Date(dateTime).toLocaleString();
 
   return (
-    <div className="bg-white rounded-2xl shadow-lg p-6 transition-transform hover:scale-[1.01] border border-gray-200">
+    <div className="mb-5 bg-white rounded-2xl shadow-lg p-6 transition-transform hover:scale-[1.01] border border-gray-200">
   <h2 className="text-2xl font-bold text-gray-800 mb-2">{title}</h2>
 
   <div className="text-gray-600 space-y-1 mb-4">

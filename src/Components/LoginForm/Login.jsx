@@ -1,12 +1,14 @@
 import CloseIcon from '@mui/icons-material/Close';
 import { useEffect, useState } from 'react';
-import { FaUser, FaEye, FaEyeSlash, FaKey } from 'react-icons/fa';
-import { Link, useNavigate } from 'react-router-dom';
+import { FaUser, FaEye, FaEyeSlash } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Login = ({ handleClose, open, setUser }) => {
   const [show, setShow] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [form, setForm] = useState({ username: '', password: '' });
+  const [form, setForm] = useState({ email: '', password: '' });
   const navigate = useNavigate();
 
   const handleSignupClick = () => {
@@ -32,21 +34,23 @@ const Login = ({ handleClose, open, setUser }) => {
       const res = await fetch('http://localhost:5000/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form)
+        body: JSON.stringify(form)  // form has { email, password }
       });
 
       const data = await res.json();
       if (res.ok) {
-        alert("Login successful!");
+        toast.success("Login successful!");
         localStorage.setItem('token', data.token);
-        setUser(data.user); // set user in Navbar
-        handleClose();
+        setUser(data.user);
+        setTimeout(() => {
+          handleClose(); // closes modal after toast shows
+        }, 1000);
       } else {
-        alert(data.message || 'Login failed');
+        toast.error(data.message || 'Login failed');
       }
     } catch (err) {
       console.error(err);
-      alert("Something went wrong");
+      toast.error("Something went wrong");
     }
   };
 
@@ -58,17 +62,18 @@ const Login = ({ handleClose, open, setUser }) => {
         <div>
           <div className='flex justify-between items-center border-b-2 p-2 mb-10'>
             <h2 className='text-black'>Login</h2>
-            <CloseIcon onClick={handleClose} className='text-black' />
+            <CloseIcon onClick={handleClose} className='text-black cursor-pointer' />
           </div>
           <form onSubmit={handleLogin} className="space-y-4">
             <div className="flex items-center bg-gray-100 px-4 py-3 rounded-md border">
               <input
-                type="text"
-                name="username"
-                value={form.username}
+                type="email"
+                name="email"
+                value={form.email}
                 onChange={handleChange}
-                placeholder="Username"
+                placeholder="Email"
                 className="bg-transparent w-full outline-none text-gray-700"
+                required
               />
               <FaUser className="text-gray-400" />
             </div>
@@ -80,6 +85,7 @@ const Login = ({ handleClose, open, setUser }) => {
                 onChange={handleChange}
                 placeholder="Password"
                 className="bg-transparent w-full outline-none text-gray-700"
+                required
               />
               <button onClick={() => setShowPassword(!showPassword)} type="button">
                 {showPassword ? <FaEyeSlash className="text-gray-400" /> : <FaEye className="text-gray-400" />}
