@@ -12,7 +12,7 @@ createRoot(document.getElementById('root')).render(
   <StrictMode>
     <ThemeProvider>
       <AuthProvider>
-        <RouterProvider router={router} />
+       <div className=' bg-gradient-to-br from-purple-700 via-indigo-700 to-blue-500'> <RouterProvider router={router} /></div>
       </AuthProvider>
     </ThemeProvider>
   </StrictMode>,

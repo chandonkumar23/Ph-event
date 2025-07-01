@@ -88,7 +88,7 @@ const MyEvent = () => {
         <p>No events found.</p>
       ) : (
         <div className="p-7 bg-slate-50 rounded-lg">
-          {booking.map(book => (
+          {booking?.map(book => (
             <MyCard
               key={book._id}
               book={book}

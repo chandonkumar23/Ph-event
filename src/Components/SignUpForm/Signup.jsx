@@ -71,7 +71,7 @@ const Signup = () => {
       }
     } catch (err) {
       console.error(err);
-      toast.error("Something went wrong");
+      toast.error("Please try again or reload");
     }
   };
 

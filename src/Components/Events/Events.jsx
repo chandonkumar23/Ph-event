@@ -114,7 +114,7 @@ const Events = () => {
             const data = await res.json();
             if (res.ok) {
                
-                const updatedEvents = events.map((ev) =>
+                const updatedEvents = events?.map((ev) =>
                     ev._id === eventId ? { ...ev, attendeeCount: ev.attendeeCount + 1 } : ev
                 );
                 setEvents(updatedEvents);
